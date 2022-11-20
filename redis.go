@@ -104,17 +104,8 @@ func (r *Redis) SetKeepTTL(key string, value []byte) (err error) {
 	return nil
 }
 
-func (r *Redis) Set(key string, value interface{}, expire int) (err error) {
-	if expire <= 0 {
-		err = r.Pool.Set(r.ctx, key, value, time.Duration(-1)).Err()
-	} else {
-		err = r.Pool.Set(r.ctx, key, value, time.Duration(expire)*time.Second).Err()
-	}
-
-	if err != nil {
-		return err
-	}
-	return nil
+func (r *Redis) Set(key string, value interface{}, expire time.Duration) (err error) {
+	return r.Pool.Set(r.ctx, key, value, expire).Err()
 }
 
 func (r *Redis) Get(key string) interface{} {
